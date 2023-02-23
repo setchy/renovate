@@ -3,7 +3,7 @@ import { readOnlyIssueBody } from './read-only-issue-body';
 
 const issueBody = Fixtures.get('issue-body.txt');
 
-describe('modules/platform/utils/read-only-issue-body', () => {
+describe('modules/issues/utils/read-only-issue-body', () => {
   describe('.readOnlyIssueBody', () => {
     it('removes all checkbox formatting', () => {
       expect(readOnlyIssueBody(issueBody)).toEqual(
