@@ -3,7 +3,7 @@ import type { PackageDependency, PackageFileContent } from '../types';
 
 export function extractPackageFile(content: string): PackageFileContent {
   const dep: PackageDependency = {
-    depName: 'eclipse-temurin',
+    depName: 'java',
     currentValue: content.trim(),
     datasource: JavaVersionDatasource.id,
   };

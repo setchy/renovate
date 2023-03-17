@@ -8,7 +8,7 @@ describe('modules/manager/jenv/extract', () => {
         {
           currentValue: '11',
           datasource: 'java-version',
-          depName: 'eclipse-temurin',
+          depName: 'java',
         },
       ]);
     });
