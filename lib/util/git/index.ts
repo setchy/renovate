@@ -1,4 +1,4 @@
-import URL from 'url';
+import URL from 'node:url';
 import is from '@sindresorhus/is';
 import delay from 'delay';
 import fs from 'fs-extra';
@@ -109,10 +109,6 @@ export async function gitRetry<T>(gitFunc: () => Promise<T>): Promise<T> {
   }
 
   throw lastError;
-}
-
-function localName(branchName: string): string {
-  return branchName.replace(regEx(/^origin\//), '');
 }
 
 async function isDirectory(dir: string): Promise<boolean> {
@@ -571,11 +567,13 @@ export async function isBranchBehindBase(
   branchName: string,
   baseBranch: string
 ): Promise<boolean> {
+  const baseBranchSha = getBranchCommit(baseBranch);
+  const branchSha = getBranchCommit(branchName);
   let isBehind = getCachedBehindBaseResult(
     branchName,
-    getBranchCommit(branchName), // branch sha
+    branchSha,
     baseBranch,
-    getBranchCommit(baseBranch) // base branch sha
+    baseBranchSha
   );
   if (isBehind !== null) {
     logger.debug(`branch.isBehindBase(): using cached result "${isBehind}"`);
@@ -586,16 +584,12 @@ export async function isBranchBehindBase(
 
   await syncGit();
   try {
-    const { currentBranchSha, currentBranch } = config;
-    const branches = await git.branch([
-      '--remotes',
-      '--verbose',
-      '--contains',
-      config.currentBranchSha,
-    ]);
-    isBehind = !branches.all.map(localName).includes(branchName);
+    const behindCount = (
+      await git.raw(['rev-list', '--count', `${branchSha!}..${baseBranchSha!}`])
+    ).trim();
+    isBehind = behindCount !== '0';
     logger.debug(
-      { currentBranch, currentBranchSha },
+      { baseBranch, branchName },
       `branch.isBehindBase(): ${isBehind}`
     );
     setCachedBehindBaseResult(branchName, isBehind);
@@ -1030,7 +1024,7 @@ export async function prepareCommit({
 
     return result;
   } catch (err) /* istanbul ignore next */ {
-    return handleCommitError(files, branchName, err);
+    return handleCommitError(err, branchName, files);
   }
 }
 
@@ -1059,15 +1053,14 @@ export async function pushCommit({
     incLimitedValue('Commits');
     result = true;
   } catch (err) /* istanbul ignore next */ {
-    handleCommitError(files, sourceRef, err);
+    handleCommitError(err, sourceRef, files);
   }
   return result;
 }
 
-export async function fetchCommit({
-  branchName,
-  files,
-}: CommitFilesConfig): Promise<CommitSha | null> {
+export async function fetchBranch(
+  branchName: string
+): Promise<CommitSha | null> {
   await syncGit();
   logger.debug(`Fetching branch ${branchName}`);
   try {
@@ -1078,7 +1071,7 @@ export async function fetchCommit({
     config.branchIsModified[branchName] = false;
     return commit;
   } catch (err) /* istanbul ignore next */ {
-    return handleCommitError(files, branchName, err);
+    return handleCommitError(err, branchName);
   }
 }
 

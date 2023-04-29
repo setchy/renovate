@@ -162,17 +162,17 @@ describe('workers/repository/update/branch/index', () => {
       });
     });
 
-    it('skips branch for fresh release with stabilityDays', async () => {
+    it('skips branch for fresh release with minimumReleaseAge', async () => {
       schedule.isScheduledNow.mockReturnValueOnce(true);
       config.prCreation = 'not-pending';
       (config.upgrades as Partial<BranchUpgradeConfig>[]) = [
         {
           releaseTimestamp: new Date('2019-01-01').getTime().toString(),
-          stabilityDays: 1,
+          minimumReleaseAge: '1 day',
         },
         {
           releaseTimestamp: new Date().toString(),
-          stabilityDays: 1,
+          minimumReleaseAge: '1 day',
         },
       ];
 
@@ -185,13 +185,13 @@ describe('workers/repository/update/branch/index', () => {
       });
     });
 
-    it('skips branch if not stabilityDays not met', async () => {
+    it('skips branch if minimumReleaseAge not met', async () => {
       schedule.isScheduledNow.mockReturnValueOnce(true);
       config.prCreation = 'not-pending';
       config.upgrades = partial<BranchUpgradeConfig>([
         {
           releaseTimestamp: '2099-12-31',
-          stabilityDays: 1,
+          minimumReleaseAge: '1 day',
         },
       ]);
       const res = await branchWorker.processBranch(config);
@@ -358,6 +358,35 @@ describe('workers/repository/update/branch/index', () => {
       scm.branchExists.mockResolvedValue(true);
       scm.isBranchModified.mockResolvedValueOnce(true);
       platform.getBranchPr.mockResolvedValueOnce(pr);
+      const res = await branchWorker.processBranch(config);
+      expect(res).toEqual({
+        branchExists: true,
+        prNo: undefined,
+        result: 'pr-edited',
+      });
+      expect(logger.debug).toHaveBeenCalledWith(
+        `PR has been edited, PrNo:${pr.number}`
+      );
+      expect(platform.ensureComment).toHaveBeenCalledTimes(1);
+      expect(platform.ensureComment).toHaveBeenCalledWith(
+        expect.objectContaining({ ...ensureCommentConfig })
+      );
+    });
+
+    it('skips branch if tagretBranch of update PR is changed by user', async () => {
+      const pr = partial<Pr>({
+        state: 'open',
+        targetBranch: 'old_base',
+      });
+      const ensureCommentConfig = partial<EnsureCommentConfig>({
+        number: pr.number,
+        topic: 'Edited/Blocked Notification',
+      });
+      schedule.isScheduledNow.mockReturnValueOnce(false);
+      scm.branchExists.mockResolvedValue(true);
+      scm.isBranchModified.mockResolvedValueOnce(false);
+      platform.getBranchPr.mockResolvedValueOnce(pr);
+      config.baseBranch = 'new_base';
       const res = await branchWorker.processBranch(config);
       expect(res).toEqual({
         branchExists: true,
