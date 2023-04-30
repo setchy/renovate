@@ -2,35 +2,24 @@ import { extractPackageFile } from './extract';
 
 describe('modules/manager/jenv/extract', () => {
   describe('extractPackageFile()', () => {
-    it('defaults to openjdk if no java variety specified', () => {
+    it('handles version only (major.minor)', () => {
       const res = extractPackageFile('11.0\n');
       expect(res.deps).toEqual([
         {
           currentValue: '11.0',
-          datasource: 'docker',
-          depName: 'openjdk',
+          datasource: 'java-version',
+          depName: 'java',
         },
       ]);
     });
 
-    it('will return eclipse-temurin is temurin variety specified', () => {
+    it('handles variety and version', () => {
       const res = extractPackageFile('temurin64-11.0\n');
       expect(res.deps).toEqual([
         {
           currentValue: '11.0',
-          datasource: 'docker',
-          depName: 'eclipse-temurin',
-        },
-      ]);
-    });
-
-    it('will return amazoncorretto if corretto variety specified', () => {
-      const res = extractPackageFile('corretto64-11.0\n');
-      expect(res.deps).toEqual([
-        {
-          currentValue: '11.0',
-          datasource: 'docker',
-          depName: 'amazoncorretto',
+          datasource: 'java-version',
+          depName: 'temurin64',
         },
       ]);
     });

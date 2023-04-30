@@ -1,23 +1,21 @@
-import { DockerDatasource } from '../../datasource/docker';
+import { JavaVersionDatasource } from '../../datasource/java-version';
 import type { PackageDependency, PackageFileContent } from '../types';
 
 export function extractPackageFile(content: string): PackageFileContent {
   const dep: PackageDependency = {
-    depName: getDepName(content),
+    depName: getPackageName(content),
     currentValue: getCurrentValue(content),
-    datasource: DockerDatasource.id,
+    datasource: JavaVersionDatasource.id,
   };
   return { deps: [dep] };
 }
 
-function getDepName(content: string): string {
-  if (content.startsWith('temurin')) {
-    return 'eclipse-temurin';
-  } else if (content.startsWith('corretto')) {
-    return 'amazoncorretto';
+function getPackageName(content: string): string {
+  if (content.includes('-')) {
+    return content.split('-')[0].trim();
   }
 
-  return 'openjdk';
+  return 'java';
 }
 
 function getCurrentValue(content: string): string {
