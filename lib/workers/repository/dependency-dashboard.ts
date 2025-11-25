@@ -38,6 +38,10 @@ const pendingApprovalRe = regEx(
   ` - \\[ \\] ${getMarkdownComment('approve-branch=([^\\s]+)')}`,
   'g',
 );
+const pendingStatusRe = regEx(
+  ` - \\[ \\] ${getMarkdownComment('approvePr-branch=([^\\s]+)')}`,
+  'g',
+);
 const generalBranchRe = regEx(
   ` ${getMarkdownComment('([a-zA-Z]+)-branch=([^\\s]+)')}`,
 );
@@ -48,6 +52,7 @@ const markedBranchesRe = regEx(
 
 const approveAllPendingPrs = 'approve-all-pending-prs';
 const createAllRateLimitedPrs = 'create-all-rate-limited-prs';
+const createAllPendingPrs = 'create-all-pending-prs';
 const createConfigMigrationPr = 'create-config-migration-pr';
 const configMigrationPrInfo = 'config-migration-pr-info';
 const rebaseAllOpenPrs = 'rebase-all-open-prs';
@@ -70,6 +75,10 @@ function getCheckbox(type: string, checked = false): string {
 
 function checkOpenAllRateLimitedPR(issueBody: string): boolean {
   return isBoxChecked(issueBody, createAllRateLimitedPrs);
+}
+
+function checkOpenAllPendingPR(issueBody: string): boolean {
+  return isBoxChecked(issueBody, createAllPendingPrs);
 }
 
 function checkApproveAllPendingPR(issueBody: string): boolean {
@@ -102,6 +111,11 @@ function selectAllRelevantBranches(issueBody: string): string[] {
   const checkedBranches = [];
   if (checkOpenAllRateLimitedPR(issueBody)) {
     for (const match of issueBody.matchAll(rateLimitedRe)) {
+      checkedBranches.push(match[0]);
+    }
+  }
+  if (checkOpenAllPendingPR(issueBody)) {
+    for (const match of issueBody.matchAll(pendingStatusRe)) {
       checkedBranches.push(match[0]);
     }
   }
@@ -502,6 +516,9 @@ export async function ensureDependencyDashboard(
     (branch) => branch.result === 'pending',
     'Pending Status Checks',
     'The following updates await pending status checks. To force their creation now, click on a checkbox below.',
+    createAllPendingPrs,
+    'Create all pending status check PRs at once',
+    '🔐',
   );
   issueBody += getBranchesListMd(
     branches,
