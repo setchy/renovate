@@ -1,0 +1,21 @@
+lib/util/markdown.spec.ts
+  s_f2bf2b5cee905a::t_eea54fd96ed737 91-108
+lib/util/markdown.ts
+  s_f2bf2b5cee905a::t_f3be1ae39d97fd 12-19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "56f607db6dfad796041caf44229372d16a03ae20",
+  "prompts": {},
+  "sessions": {
+    "s_f2bf2b5cee905a": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "9df34a7d-021e-4c7d-879d-eec380089138",
+        "model": "claude-sonnet-4.6"
+      },
+      "human_author": "Adam Setch <adam.setch@outlook.com>"
+    }
+  }
+}
