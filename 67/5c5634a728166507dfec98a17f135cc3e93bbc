@@ -1,0 +1,19 @@
+docs/usage/key-concepts/pull-requests.md
+  s_6aa704a0cd3af0::t_7e863baf49acb7 93,95-96
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "675c5634a728166507dfec98a17f135cc3e93bbc",
+  "prompts": {},
+  "sessions": {
+    "s_6aa704a0cd3af0": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "cd83604a-ce70-4c7a-83ab-8500f5d24142",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Adam Setch <adam.setch@outlook.com>"
+    }
+  }
+}
