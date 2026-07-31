@@ -1,0 +1,24 @@
+docs/usage/key-concepts/pull-requests.md
+  s_6aa704a0cd3af0::t_9f7ba97619c250 107
+  s_6aa704a0cd3af0::t_256f049d8c3406 86-87,93-96,98-100,102-104,106,108
+  s_6aa704a0cd3af0::t_73f3c2ae653f63 89-90,97
+  s_6aa704a0cd3af0::t_8c875d11309839 88,91-92,101,105
+docs/usage/configuration-options.md
+  s_6aa704a0cd3af0::t_580cb18a532064 4506
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "8b4aa3901e7c0235601d70201107052291bce792",
+  "prompts": {},
+  "sessions": {
+    "s_6aa704a0cd3af0": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "cd83604a-ce70-4c7a-83ab-8500f5d24142",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Adam Setch <adam.setch@outlook.com>"
+    }
+  }
+}
