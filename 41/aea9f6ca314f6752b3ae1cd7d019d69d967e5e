@@ -1,0 +1,14 @@
+docs/usage/key-concepts/pull-requests.md
+  h_ac004aadb63da9 92
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.18",
+  "base_commit_sha": "41aea9f6ca314f6752b3ae1cd7d019d69d967e5e",
+  "prompts": {},
+  "humans": {
+    "h_ac004aadb63da9": {
+      "author": "Adam Setch <adam.setch@outlook.com>"
+    }
+  }
+}
