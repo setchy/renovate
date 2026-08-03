@@ -1,0 +1,16 @@
+lib/workers/repository/dependency-dashboard.ts
+  h_ac004aadb63da9 722
+lib/workers/repository/dependency-dashboard.spec.ts
+  h_ac004aadb63da9 2096
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "b35eca268fd942cc42ff59fc5e88294948ca2443",
+  "prompts": {},
+  "humans": {
+    "h_ac004aadb63da9": {
+      "author": "Adam Setch <adam.setch@outlook.com>"
+    }
+  }
+}
