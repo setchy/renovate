@@ -1,0 +1,24 @@
+lib/workers/repository/dependency-dashboard.ts
+  s_6a85fa2b1160f3::t_220ab84c3b9958 458
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "4812cf29726dedf50a748bcab9d3c4e0c94c53f8",
+  "prompts": {},
+  "humans": {
+    "h_a0f6346f017988": {
+      "author": "Adam Setch <adam@setchfield.dev>"
+    }
+  },
+  "sessions": {
+    "s_6a85fa2b1160f3": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "36da5fab-49a0-4e6b-b4e0-1c650b4288de",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Adam Setch <adam.setch@outlook.com>"
+    }
+  }
+}
