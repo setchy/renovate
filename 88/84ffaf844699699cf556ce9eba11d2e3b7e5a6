@@ -1,0 +1,24 @@
+lib/modules/platform/utils/pr-body.ts
+  s_cdbbdab8c9fddd::t_5f8102da5f20b5 22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "8884ffaf844699699cf556ce9eba11d2e3b7e5a6",
+  "prompts": {},
+  "humans": {
+    "h_ac004aadb63da9": {
+      "author": "Adam Setch <adam.setch@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_cdbbdab8c9fddd": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "9e9bf73e-16b1-44d6-be1f-f6fa0ffb75d3",
+        "model": "unknown"
+      },
+      "human_author": "Adam Setch <adam.setch@outlook.com>"
+    }
+  }
+}
