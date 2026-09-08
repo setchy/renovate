@@ -1,0 +1,14 @@
+lib/data/monorepo.json
+  h_ac004aadb63da9 10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "39fd2b4a61dd41bd7fc9d4e3108343df0d73c666",
+  "prompts": {},
+  "humans": {
+    "h_ac004aadb63da9": {
+      "author": "Adam Setch <adam.setch@outlook.com>"
+    }
+  }
+}
