@@ -4,7 +4,6 @@ import {
   isNumber,
   isUndefined,
 } from '@sindresorhus/is';
-import { codeBlock } from 'common-tags';
 import { GlobalConfig } from '../../../../config/global.ts';
 import type { RenovateConfig } from '../../../../config/types.ts';
 import {
@@ -147,12 +146,12 @@ function addPullRequestNoteIfAttestationHasBeenLost(
     upgrade.prBodyNotes ??= [];
     upgrade.prBodyNotes.push(
       emojify(
-        codeBlock`
-          > :stop_sign: **Caution**
-          >
-          > ${name} ${currentVersion} was released with an attestation, but ${newVersion} has no attestation.
-          > Verify that release ${newVersion} was published by the expected author.
-        `,
+        [
+          '> :stop_sign: **Caution**',
+          '>',
+          `> ${name} ${currentVersion} was released with an attestation, but ${newVersion} has no attestation.`,
+          `> Verify that release ${newVersion} was published by the expected author.`,
+        ].join('\n'),
       ),
     );
   }
@@ -340,12 +339,12 @@ export async function ensurePr(
         upgrade.prBodyNotes ??= [];
         upgrade.prBodyNotes.push(
           emojify(
-            codeBlock`
-              > :exclamation: **Important**
-              >
-              > Release Notes retrieval for this PR were skipped because no github.com credentials were available.
-              > If you are self-hosted, please see [this instruction](https://github.com/renovatebot/renovate/blob/master/docs/usage/examples/self-hosting.md#githubcom-token-for-release-notes).
-            `,
+            [
+              '> :exclamation: **Important**',
+              '>',
+              '> Release Notes retrieval for this PR were skipped because no github.com credentials were available.',
+              '> If you are self-hosted, please see [this instruction](https://github.com/renovatebot/renovate/blob/master/docs/usage/examples/self-hosting.md#githubcom-token-for-release-notes).',
+            ].join('\n'),
           ),
         );
       }
