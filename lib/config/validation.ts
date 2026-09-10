@@ -108,7 +108,7 @@ const ignoredNodes = [
   'prBody', // deprecated
   'minimumConfidence', // undocumented feature flag
 ];
-const tzRe = regEx(/^:timezone\((.+)\)$/);
+const tzRe = regEx(/^:timezone\((?<timezone>.+)\)$/);
 const rulesRe = regEx(/p.*Rules\[\d+\]$/);
 const repoEntryRe = regEx(/^repositories\[\d+\]$/);
 
@@ -248,8 +248,32 @@ function stripRelativePresetsFromValue(value: unknown): boolean {
   return stripped;
 }
 
+type ConfigType = 'global' | 'inherit' | 'repo';
+
+/**
+ * Whether a `hostRules` `allowInternal` is honored from this kind of config.
+ *
+ * Only the self-hosted administrator's own configuration may grant access to internal hosts. The inherited config repository belongs to the organization rather than to them, so its rules only count where the administrator has opted into trusting them with `inheritConfigTrusted`.
+ */
+function mayGrantInternalHostAccess(configType: ConfigType): boolean {
+  if (configType === 'global') {
+    return true;
+  }
+  if (configType === 'inherit') {
+    return GlobalConfig.get('inheritConfigTrusted');
+  }
+  return false;
+}
+
+function allowInternalNotAllowedMessage(configType: ConfigType): string {
+  if (configType === 'inherit') {
+    return 'hostRules `allowInternal` is not allowed in inherited config, as this Renovate instance has not set `inheritConfigTrusted=true`. The administrator can either set it, or move the rule to their global config or a `repositories[]` entry.';
+  }
+  return `hostRules \`allowInternal\` is only allowed in the self-hosted administrator's own configuration.`;
+}
+
 export async function validateConfig(
-  configType: 'global' | 'inherit' | 'repo',
+  configType: ConfigType,
   config: AllConfig,
   isPreset?: boolean,
   parentPath?: string,
@@ -798,7 +822,14 @@ export async function validateConfig(
                     }
                     if (!matchRegexOrGlobList(envVarName, allowedEnvVars)) {
                       errors.push({
-                        topic: ConfigValidationTopic.Error,
+                        // `Security` is always a fatal error that blocks the rest of the Renovate run.
+                        //
+                        // As `env` is only applied when it's at the top-level (where `parentPath === undefined`), we should only report a security error there.
+                        //
+                        // If it's found to be set to a disallowed value - even if it's not going to be used - we should report as an error, which may block the run, but much less worryingly than Security.
+                        topic: parentPath
+                          ? ConfigValidationTopic.Error
+                          : ConfigValidationTopic.Security,
                         message: `Env variable name \`${envVarName}\` is not allowed by this Renovate instance's \`allowedEnv\`.`,
                       });
                     }
@@ -818,9 +849,9 @@ export async function validateConfig(
                         message: `Invalid \`${currentPath}.${key}.${statusCheckKey}\` configuration: key is not allowed.`,
                       });
                     }
-                    if (
-                      !(isString(statusCheckValue) || null === statusCheckValue)
-                    ) {
+                    if (!(
+                      isString(statusCheckValue) || null === statusCheckValue
+                    )) {
                       errors.push({
                         topic: ConfigValidationTopic.Error,
                         message: `Invalid \`${currentPath}.${statusCheckKey}\` configuration: status check is not a string.`,
@@ -889,9 +920,9 @@ export async function validateConfig(
                           });
                         }
                       } else if (subKey === 'description') {
-                        if (
-                          !(isString(subValue) || isArray(subValue, isString))
-                        ) {
+                        if (!(
+                          isString(subValue) || isArray(subValue, isString)
+                        )) {
                           errors.push({
                             topic: ConfigValidationTopic.Error,
                             message: `Invalid \`${currentPath}.${subKey}\` configuration: is not an array of strings`,
@@ -1032,6 +1063,19 @@ export async function validateConfig(
               });
             }
 
+            if (
+              !isUndefined(rule.allowInternal) &&
+              !mayGrantInternalHostAccess(configType)
+            ) {
+              errors.push({
+                // like disallowed `headers` below, `Security` only where the rules are actually applied - see the comment there
+                topic: parentPath
+                  ? ConfigValidationTopic.Error
+                  : ConfigValidationTopic.Security,
+                message: allowInternalNotAllowedMessage(configType),
+              });
+            }
+
             if (!rule.headers) {
               continue;
             }
@@ -1044,7 +1088,14 @@ export async function validateConfig(
               }
               if (!matchRegexOrGlobList(header, allowedHeaders)) {
                 errors.push({
-                  topic: ConfigValidationTopic.Error,
+                  // `Security` is always a fatal error that blocks the rest of the Renovate run.
+                  //
+                  // As `hostRules[]` is only applied when it's at the top-level (where `parentPath === undefined`), we should only report a security error there.
+                  //
+                  // If it's found to be set to a disallowed value - even if it's not going to be used - we should report as an error, which may block the run, but much less worryingly than Security.
+                  topic: parentPath
+                    ? ConfigValidationTopic.Error
+                    : ConfigValidationTopic.Security,
                   message: `hostRules header \`${header}\` is not allowed by this Renovate instance's \`allowedHeaders\`.`,
                 });
               }
@@ -1300,7 +1351,15 @@ async function validateGlobalConfig(
             warnings.push(warning);
           }
         } else if (key === 'force') {
-          const subValidation = await validateConfig('global', val);
+          // `force` is validated as a global config of its own, so it does not automatically see the top-level `allowedEnv`/`allowedHeaders`.
+          // Inherit them (unless `force` sets its own) so that the self-hosted admin's own `force.env`/`force.hostRules[].headers` are validated against the allowlists they set, rather than an empty one.
+          const subValidation = await validateConfig('global', {
+            ...(config.allowedEnv ? { allowedEnv: config.allowedEnv } : {}),
+            ...(config.allowedHeaders
+              ? { allowedHeaders: config.allowedHeaders }
+              : {}),
+            ...val,
+          });
           for (const warning of subValidation.warnings.concat(
             subValidation.errors,
           )) {
