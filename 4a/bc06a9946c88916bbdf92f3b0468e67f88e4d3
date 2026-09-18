@@ -1,0 +1,31 @@
+lib/workers/repository/__fixtures__/dependency-dashboard-with-10-PR.txt
+  s_87d3da7332f765::t_283f03e7d7f784 15-18
+docs/usage/configuration-options.md
+  s_87d3da7332f765::t_c3ee8f7f58eda3 1633
+lib/workers/repository/dependency-dashboard.ts
+  s_87d3da7332f765::t_b77dcb3b0b6b77 317-319
+  s_87d3da7332f765::t_5099f465bdbf32 238,243-244,293,295-299,301-306,313-316,320-325,327-329,361
+  s_87d3da7332f765::t_20153aaca3a62e 239-242
+  s_87d3da7332f765::t_c3ee8f7f58eda3 326
+  s_87d3da7332f765::t_283f03e7d7f784 307-312
+  s_87d3da7332f765::t_dcc44e623755de 300,369
+lib/workers/repository/dependency-dashboard.spec.ts
+  s_87d3da7332f765::t_283f03e7d7f784 613,624-647,659-673,856,888-889,894
+  s_87d3da7332f765::t_056e48d153df34 895
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "4abc06a9946c88916bbdf92f3b0468e67f88e4d3",
+  "prompts": {},
+  "sessions": {
+    "s_87d3da7332f765": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "eb6db5f8-1d19-4b97-be88-be6747ed409b",
+        "model": "copilot/gpt-5.6-sol"
+      },
+      "human_author": "Adam Setch <adam.setch@outlook.com>"
+    }
+  }
+}
