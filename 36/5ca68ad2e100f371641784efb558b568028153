@@ -1,0 +1,28 @@
+lib/config/presets/internal/group.preset.ts
+  h_ac004aadb63da9 527
+  s_87d3da7332f765::t_194dc66564082d 428-434
+  s_87d3da7332f765::t_892bdcda87da83 435-437
+lib/config/presets/internal/group.spec.ts
+  s_87d3da7332f765::t_3cece294144032 13-25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "365ca68ad2e100f371641784efb558b568028153",
+  "prompts": {},
+  "humans": {
+    "h_ac004aadb63da9": {
+      "author": "Adam Setch <adam.setch@outlook.com>"
+    }
+  },
+  "sessions": {
+    "s_87d3da7332f765": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "eb6db5f8-1d19-4b97-be88-be6747ed409b",
+        "model": "copilot/gpt-5.6-sol"
+      },
+      "human_author": "Adam Setch <adam.setch@outlook.com>"
+    }
+  }
+}
