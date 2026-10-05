@@ -1,0 +1,16 @@
+lib/modules/manager/github-actions/extract.spec.ts
+  h_ac004aadb63da9 3325-3387
+lib/modules/manager/github-actions/known-actions/github-releases.ts
+  h_ac004aadb63da9 142-149
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "73787a06c15a575a6f2796f7c37d102b6d14be5d",
+  "prompts": {},
+  "humans": {
+    "h_ac004aadb63da9": {
+      "author": "Adam Setch <adam.setch@outlook.com>"
+    }
+  }
+}
