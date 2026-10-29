@@ -1,0 +1,14 @@
+lib/config/presets/internal/group.preset.ts
+  h_ac004aadb63da9 6-17,385-400
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "dcbcf081d202567dfadae607625bb4bf6ca6982a",
+  "prompts": {},
+  "humans": {
+    "h_ac004aadb63da9": {
+      "author": "Adam Setch <adam.setch@outlook.com>"
+    }
+  }
+}
